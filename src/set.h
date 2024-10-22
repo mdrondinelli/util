@@ -813,9 +813,9 @@ public:
         max_bucket_count * static_cast<double>(max_load_factor()));
     if (max_bucket_count > _impl->max_bucket_count() ||
         max_node_count > _impl->max_size()) {
-      auto temp = make_set<T, Hash, Equal>(static_cast<Allocator &>(*this),
-                                           max_node_count,
-                                           max_bucket_count)
+      auto temp = Set<T, Hash, Equal>::make(static_cast<Allocator &>(*this),
+                                            max_node_count,
+                                            max_bucket_count)
                       .second;
       temp.rehash(max_bucket_count);
       for (auto &object : *_impl) {

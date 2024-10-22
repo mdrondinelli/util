@@ -47,6 +47,10 @@ public:
     _allocator.free({reinterpret_cast<std::byte *>(object), sizeof(T)});
   }
 
+  Const_block block() const noexcept {
+    return _allocator.parent().block();
+  }
+
 private:
   Free_list_allocator<Stack_allocator<alignof(T)>,
                       sizeof(T),
