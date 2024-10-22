@@ -15,7 +15,7 @@ I've written a few memory allocators I've found useful, most notably `Stack_allo
 I've written near drop-in replacements for several C++ standard library containers, each with a non-allocating and allocating variant.
 The non-allocating variants take a chunk of memory during construction and throw an exception if you try to exceed the pre-allocated capacity.
 
-- Although `List` and `Allocating_list` are basically the same as `std::vector`.
+- `List` and `Allocating_list` are basically the same as `std::vector`.
 - `Set`, `Map`, `Allocating_set`, and `Allocating_map` are slightly different than `std::unordered_set` and `std::unordered_map`.
   Specifically, `Allocating_set` and `Allocating_map` do not guarantee referential stability when they reallocate.
   Otherwise, their APIs are basically the same.
