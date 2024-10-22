@@ -3,6 +3,7 @@
 
 #include <algorithm>
 
+#include "lifetime_box.h"
 #include "memory.h"
 
 namespace marlon {
@@ -51,6 +52,48 @@ private:
                       sizeof(T),
                       std::max(sizeof(T), sizeof(void *))>
       _allocator;
+};
+
+template <typename T, typename Allocator = System_allocator>
+class Allocating_pool : private Allocator {
+public:
+  Allocating_pool() {
+    _impl.construct();
+  }
+
+  explicit Allocating_pool(Allocator const &allocator)
+      : Allocator{allocator} {
+    _impl.construct();
+  }
+
+  Allocating_pool(util::Size max_objects) {
+    _impl.construct(
+        Pool<T>::make(static_cast<Allocator &>(*this), max_objects).second);
+  }
+
+  Allocating_pool(util::Size max_objects, Allocator const &allocator)
+      : Allocator{allocator} {
+    _impl.construct(
+        Pool<T>::make(static_cast<Allocator &>(*this), max_objects).second);
+  }
+
+  ~Allocating_pool() {
+    if (auto const block = _impl->block()) {
+      _impl.destruct();
+      Allocator::free(block);
+    }
+  }
+
+  template <typename... Args> T *emplace(Args &&...args) {
+    return _impl->emplace(std::forward<Args>(args)...);
+  }
+
+  void erase(T *object) {
+    return _impl->erase(object);
+  }
+
+private:
+  Lifetime_box<Pool<T>> _impl;
 };
 } // namespace util
 } // namespace marlon
