@@ -9,6 +9,12 @@ public:
   constexpr Span(T *begin, T *end) noexcept
       : _begin{begin}, _end{end} {}
 
+  constexpr Span(T *begin, Size size) noexcept
+      : _begin{begin}, _end{begin + size} {}
+
+  constexpr Span(T *begin, Usize size) noexcept
+      : _begin{begin}, _end{begin + size} {}
+
   constexpr T *begin() const noexcept {
     return _begin;
   }
